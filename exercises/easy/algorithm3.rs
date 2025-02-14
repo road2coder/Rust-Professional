@@ -16,6 +16,7 @@ fn quick_sort<T: PartialOrd>(nums: &mut [T]) {
     }
     let mut right = len - 1;
     let mut left = 0;
+    // 分治
     while left < right {
         while left < right && nums[right] >= nums[0] {
             right -= 1;
@@ -26,6 +27,7 @@ fn quick_sort<T: PartialOrd>(nums: &mut [T]) {
         nums.swap(left, right);
     }
     nums.swap(0, left);
+    // 递归
     quick_sort(&mut nums[..left]);
     quick_sort(&mut nums[left + 1..]);
 }
