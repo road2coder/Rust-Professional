@@ -1,11 +1,15 @@
 pub fn odd_fibnacci_sum(threshold: u32) -> u32 {
     let mut nums = vec![1, 1];
+    let (mut first, mut second) = (1, 1);
     loop {
-        let sum_prev_two = nums[nums.len() - 2..].iter().sum();
+        let sum_prev_two = first + second;
         if sum_prev_two > threshold {
             break;
+        } else if sum_prev_two & 1 == 1 {
+            nums.push(sum_prev_two);
         }
-        nums.push(sum_prev_two);
+        first = second;
+        second = sum_prev_two;
     }
-    nums.iter().filter(|i| **i & 1 == 1).sum()
+    nums.iter().sum()
 }
