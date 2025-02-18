@@ -47,13 +47,45 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        if self.root.is_none() {
+            self.root = Some(Box::new(TreeNode::new(value)));
+            return;
+        }
+        let mut parent = self.root.as_mut();
+        while let Some(node) = parent {
+            match value.cmp(&node.value) {
+                Ordering::Less => {
+                    if node.left.is_none() {
+                        node.insert(value);
+                        return;
+                    } else {
+                        parent = node.left.as_mut();
+                    }
+                }
+                Ordering::Greater => {
+                    if node.right.is_none() {
+                        node.insert(value);
+                        return;
+                    } else {
+                        parent = node.right.as_mut();
+                    }
+                }
+                Ordering::Equal => return,
+            }
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        //TODO
-        true
+        let mut parent = self.root.as_ref();
+        while let Some(node) = parent {
+            match value.cmp(&node.value) {
+                Ordering::Less => parent = node.left.as_ref(),
+                Ordering::Greater => parent = node.right.as_ref(),
+                Ordering::Equal => return true,
+            }
+        }
+        false
     }
 }
 
@@ -63,7 +95,23 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
-        //TODO
+        match value.cmp(&self.value) {
+            Ordering::Less => {
+                if (self.left.is_none()) {
+                    self.left = Some(Box::new(TreeNode::new(value)));
+                } else {
+                    self.left.as_mut().unwrap().value = value;
+                }
+            }
+            Ordering::Greater => {
+                if (self.right.is_none()) {
+                    self.right = Some(Box::new(TreeNode::new(value)));
+                } else {
+                    self.right.as_mut().unwrap().value = value;
+                }
+            }
+            Ordering::Equal => {}
+        }
     }
 }
 
