@@ -30,8 +30,9 @@ impl<T> Stack<T> {
         self.size += 1;
     }
     fn pop(&mut self) -> Option<T> {
-        // TODO
-        None
+        self.data.pop().inspect(|_| {
+            self.size -= 1;
+        })
     }
     fn peek(&self) -> Option<&T> {
         if 0 == self.size {
@@ -95,8 +96,26 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 }
 
 fn bracket_match(bracket: &str) -> bool {
-    //TODO
-    true
+    // 可使用 hashmap 提升性能
+    let mut stack = Stack::new();
+    let left = [b'(', b'[', b'{'];
+    let right = [b')', b']', b'}'];
+    for i in bracket.as_bytes() {
+        if left.contains(i) {
+            stack.push(i);
+            continue;
+        }
+        if let Some(pos) = right.iter().position(|r| i == r) {
+            if let Some(l) = stack.pop() {
+                if l != &left[pos] {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+    stack.is_empty()
 }
 
 #[cfg(test)]
@@ -134,4 +153,3 @@ mod tests {
         assert_eq!(bracket_match(s), true);
     }
 }
-
